@@ -32,12 +32,21 @@
     th,td{
         border: 1px solid black;
     }
+    .nodeName{
+        width: 40%
+    }
+    .value{
+        width: 30%
+    }
     table{
         border-collapse:  collapse;
     }
-    table > td {
-        width: 30%;
+    tr {
+        width: 100%
     }
+/*    table > td {
+        width: 30%;
+    }*/
     #version{
         background-color: lightgray;
         width: 30%;
@@ -72,33 +81,33 @@ set_time_limit(3600);
 $filename1 = '';
 
 if (isset($_FILES['file1']['tmp_name'])) {
-    $filename1 = $_FILES['file1']['tmp_name'];
+$filename1 = $_FILES['file1']['tmp_name'];
 }
 $filename2 = '';
 
 if (isset($_FILES['file2']['tmp_name'])) {
-    $filename2 = $_FILES['file2']['tmp_name'];
+$filename2 = $_FILES['file2']['tmp_name'];
 }
 if (!$filename1 == '') {
-    if (file_exists($filename1)) {
+if (file_exists($filename1)) {
 
-        $fileContent1 = file_get_contents($filename1);
-    } else {
-        die('Файл 1 выбран, но не загрузился на сервер. Проверьте права или что-то ещё на серваке');
-    }
+$fileContent1 = file_get_contents($filename1);
 } else {
-    die('Не выбран файл 1');
+die('Файл 1 выбран, но не загрузился на сервер. Проверьте права или что-то ещё на серваке');
+}
+} else {
+die('Не выбран файл 1');
 }
 
 if (!$filename2 == '') {
-    if (file_exists($filename2)) {
+if (file_exists($filename2)) {
 
-        $fileContent2 = file_get_contents($filename2);
-    } else {
-        die('Файл 2 выбран, но не загрузился на сервер. Проверьте права или что-то ещё на серваке');
-    }
+$fileContent2 = file_get_contents($filename2);
 } else {
-    die('Не выбран файл 2');
+die('Файл 2 выбран, но не загрузился на сервер. Проверьте права или что-то ещё на серваке');
+}
+} else {
+die('Не выбран файл 2');
 }
 
 //av:ОКУД0420502_2_16_3_1
@@ -107,29 +116,44 @@ libxml_use_internal_errors(true);
 $fileContent1 = preg_replace('/(<av:ОКУД[^[:space:]]*).([^>]*)/', '$1', $fileContent1);
 $xmlObject1 = new SimpleXMLElement($fileContent1);
 if (!$xmlObject1) {
-    echo "Ошибка загрузки XML\n";
-    foreach (libxml_get_errors() as $error) {
-        echo "\t", $error->message;
-    }
+echo "Ошибка загрузки XML\n";
+foreach (libxml_get_errors() as $error) {
+echo "\t", $error->message;
+}
 }
 $fileContent2 = preg_replace('/(<av:ОКУД[^[:space:]]*).([^>]*)/', '$1', $fileContent2);
 $xmlObject2 = new SimpleXMLElement($fileContent2);
 if (!$xmlObject2) {
-    echo "Ошибка загрузки XML\n";
-    foreach (libxml_get_errors() as $error) {
-        echo "\t", $error->message;
-    }
+echo "Ошибка загрузки XML\n";
+foreach (libxml_get_errors() as $error) {
+echo "\t", $error->message;
+}
 }
 require_once './classes/Headers.php';
-$headers=new Headers();
-$headers->fileNumber=1;
-$headers->getFullHeaders('',$xmlObject1);
-$headers->fileNumber=2;
-$headers->getFullHeaders('',$xmlObject2);
+$headers = new Headers();
+$headers->fileNumber = 1;
+$headers->getFullHeaders('', $xmlObject1);
+$headers->fileNumber = 2;
+$headers->getFullHeaders('', $xmlObject2);
+$headers->compareValues();
+//die(var_dump($headers));
+?><table>
+<?php
+    foreach ($headers->fullHeaders as $nodeName => $nodeValues){
+    ?><tr class="<?php if(isset($nodeValues['difference'])){echo $nodeValues['difference'];} ?>">
+        <td class="nodeName"><?php if(isset($nodeValues['nodeName'])){echo $nodeValues['nodeName'];} ?> </td>
+        <td class="value"><?php if(isset($nodeValues[1])){echo $nodeValues[1];} ?></td>
+        <td class="value"><?php if(isset($nodeValues[2])){echo $nodeValues[2];} ?></td>
+    </tr>
+    <?php
+    }
+    ?>
+</table>
+<?php
+die();
 die(var_dump($headers));
 
-$fullHeaders=getFullHeaders(array(), $xmlObject1);
-die(var_dump($fullHeaders));
+die(var_dump('kjkl'));
 
 
 
