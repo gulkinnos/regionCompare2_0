@@ -10,21 +10,50 @@ class Headers {
     public $fullHeaders = [];
     public $counter = 0;
     public $fileNumber = 0;
-    public $externalVocab=null;
+    public $externalVocab = null;
 
-    public function getFullHeaders($parentNodeName, $xmlObject, $currentNodeName = '') {
-        $this->counter++;
+    public function getFullHeaders($parentNodePath, $xmlObject, $fullNodePath = '', $currentNodeName = '', $childNumber = 0, $ISIN = null) {
         if ($xmlObject->children()) {
-            if ($parentNodeName !== '') {
-                $this->fullHeaders[$parentNodeName]['nodeName'] = $currentNodeName;
-                $this->fullHeaders[$parentNodeName][$this->fileNumber] = strval($xmlObject);
+            if ($fullNodePath !== '') {
+                $this->fullHeaders[$fullNodePath]['nodeName'] = $currentNodeName;
+                $this->fullHeaders[$fullNodePath][$this->fileNumber] = strval($xmlObject);
+            }
+            $childNumber = 0;
+            if (is_null($ISIN)) {
+                foreach
+                ($xmlObject->children() as $childrenName => $childrenNode) {
+                    if ($childrenName == 'av:Кол7_Таб2КодISIN' ||
+                            $childrenName == 'av:Кол7_Таб8КодISIN' ||
+                            $childrenName == 'av:Кол6_Таб3КодISIN' ||
+                            $childrenName == 'av:Кол7_Таб34_2ОГРНДолжника'
+                    ) {
+                        $ISIN = strval($childrenNode);
+                        $groupName = $childrenName;
+                        break;
+                    }
+                }
             }
             foreach ($xmlObject->children() as $nodeName => $node) {
-                $this->getFullHeaders($parentNodeName . '/' . $nodeName, $node, $nodeName);
+                $childNumber++;
+                if (is_null($ISIN)) {
+                    $childNodePath = $fullNodePath . '/' . $nodeName . '/' . $childNumber;
+                } else {
+                    if (strpos($fullNodePath, $ISIN) === false) {
+                        $childNodePath = $parentNodePath . '/' . $ISIN . '/' . $nodeName;
+                    } else {
+                        $childNodePath = substr($fullNodePath, 0, strpos($fullNodePath, $ISIN)) . '/' . $ISIN . '/' . $nodeName;
+                    }
+                }
+                if (isset($groupName)) {
+                    $this->fullHeaders[$fullNodePath]['containsISINs'] = 'Группировка по '.$groupName;
+                }
+                $this->getFullHeaders($fullNodePath, $node, $childNodePath, $nodeName, $childNumber, $ISIN);
             }
         } else {
-            $this->fullHeaders[$parentNodeName]['nodeName'] = $currentNodeName;
-            $this->fullHeaders[$parentNodeName][$this->fileNumber] = strval($xmlObject);
+            $this->fullHeaders[$fullNodePath]['parentNodePath'] = $parentNodePath;
+            $this->fullHeaders[$fullNodePath]['nodeName'] = $currentNodeName;
+            $this->fullHeaders[$fullNodePath]['fullNodePath'] = $fullNodePath;
+            $this->fullHeaders[$fullNodePath][$this->fileNumber] = strval($xmlObject);
         }
     }
 
@@ -38,32 +67,36 @@ class Headers {
             }
         }
     }
-/**
- * 
- * @param type $str1
- * @param type $str2
- * @return boolean
- */
-     function srtringsIdentical($str1, $str2) {
-         /**
-          * @todo Подумать и ускорить
-          */
+    /**
+     * 
+     * @param type $str1
+     * @param type $str2
+     * @return boolean
+     */
+    function srtringsIdentical($str1, $str2) {
+        /**
+         * @todo Подумать и ускорить
+         */
         $result = false;
+        if ($str1 == $str2) {
+            return true;
+        }
+
+        $pattern = array('/,/', '/\\s{1,}/', '/«/', '/»/', '/"/');
+        $replacement = array('.', '', '"', '"', '');
+        $str1 = trim($str1);
+        $str2 = trim($str2);
+        $str1 = mb_strtolower($str1);
+        $str2 = mb_strtolower($str2);
+        $str1 = preg_replace($pattern, $replacement, $str1);
+        $str2 = preg_replace($pattern, $replacement, $str2);
+
         if ($str1 == $str2) {
             return true;
         }
         $encodedCurrentVocab = $this->getExternalVocab();
         foreach ($encodedCurrentVocab as $ruleIndex => $rule) {
             if ($result == false) {
-                $pattern = array('/,/', '/\\s{1,}/', '/«/', '/»/', '/"/');
-                $replacement = array('.', '', '"', '"', '');
-                $str1 = trim($str1);
-                $str2 = trim($str2);
-                $str1 = mb_strtolower($str1);
-                $str2 = mb_strtolower($str2);
-                $str1 = preg_replace($pattern, $replacement, $str1);
-                $str2 = preg_replace($pattern, $replacement, $str2);
-
                 $ruleSrt1 = $rule[0];
                 $ruleSrt2 = $rule[1];
                 $ruleSrt1 = mb_strtolower($ruleSrt1);
@@ -71,31 +104,11 @@ class Headers {
                 $ruleSrt1 = preg_replace($pattern, $replacement, $ruleSrt1);
                 $ruleSrt2 = preg_replace($pattern, $replacement, $ruleSrt2);
 
-                if ($ruleSrt1 == $str1) {
-                    if ($str2 == $ruleSrt2) {
-                        return true;
-                    }
+                if ($ruleSrt1 == $str1 && $str2 == $ruleSrt2) {
+                    return true;
                 }
-                if ($result == false) {
-                    if ($ruleSrt2 == $str1) {
-                        if ($str2 == $ruleSrt1) {
-                            return true;
-                        }
-                    }
-                }
-                if ($result == false) {
-                    if ($ruleSrt1 == $str2) {
-                        if ($str1 == $ruleSrt2) {
-                            return true;
-                        }
-                    }
-                    if ($result == FALSE) {
-                        if ($ruleSrt2 == $str2) {
-                            if ($str1 == $ruleSrt1) {
-                                return true;
-                            }
-                        }
-                    }
+                if ($ruleSrt2 == $str1 && $str2 == $ruleSrt1) {
+                    return true;
                 }
             } else {
                 return true;
@@ -104,66 +117,9 @@ class Headers {
 
         return $result;
     }
-    
-    function srtringsIdenticalOldGavno($str1, $str2) {
-        $result = false;
-        $encodedCurrentVocab = $this->getExternalVocab();
-                echo $str1.'<>'.$str2.'<hr>';
-
-        foreach ($encodedCurrentVocab as $ruleIndex => $rule) {
-            if ($result == FALSE) {
-                $pattern = array('/,/', '/\\s{1,}/', '/«/', '/»/', '/"/');
-                $replacement = array('.', '', '"', '"', '');
-                $str1 = trim($str1);
-                $str2 = trim($str2);
-                $str1 = mb_strtolower($str1);
-                $str2 = mb_strtolower($str2);
-                $str1 = preg_replace($pattern, $replacement, $str1);
-                $str2 = preg_replace($pattern, $replacement, $str2);
-
-                $ruleSrt1 = $rule[0];
-                $ruleSrt2 = $rule[1];
-                $ruleSrt1 = mb_strtolower($ruleSrt1);
-                $ruleSrt2 = mb_strtolower($ruleSrt2);
-                $ruleSrt1 = preg_replace($pattern, $replacement, $ruleSrt1);
-                $ruleSrt2 = preg_replace($pattern, $replacement, $ruleSrt2);
-
-                if ($ruleSrt1 == $str1) {
-                    if ($str2 == $ruleSrt2) {
-                        $result = true;
-                    }
-                }
-                if ($result == FALSE) {
-                    if ($ruleSrt2 == $str1) {
-                        if ($str2 == $ruleSrt1) {
-                            $result = true;
-                        }
-                    }
-                }
-                if ($result == FALSE) {
-                    if ($ruleSrt1 == $str2) {
-                        if ($str1 == $ruleSrt2) {
-                            $result = true;
-                        }
-                    }
-                    if ($result == FALSE) {
-                        if ($ruleSrt2 == $str2) {
-                            if ($str1 == $ruleSrt1) {
-                                $result = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if ($str1 == $str2) {
-            $result = true;
-        }
-        return $result;
-    }
 
     function getExternalVocab() {
-        if(!is_null($this->externalVocab)){
+        if (!is_null($this->externalVocab)) {
             return $this->externalVocab;
         }
         $result = [];
@@ -173,7 +129,7 @@ class Headers {
             $result = $this->csv_to_array($currentVocabFileName, '~');
         }
         echo 'Словарь подключен</br>';
-        $this->externalVocab=$result;
+        $this->externalVocab = $result;
         return $result;
     }
 
