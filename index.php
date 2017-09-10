@@ -1,3 +1,6 @@
+<head>
+    <meta charset="utf-8"/>
+</head>
 <style>
     .commonDiv div{
         display: inline-block;
