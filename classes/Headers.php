@@ -28,7 +28,13 @@ class Headers {
                             $childrenName == 'av:Кол7_Таб34_2ОГРНДолжника'
                     ) {
                         $ISIN = strval($childrenNode);
+
                         $groupName = $childrenName;
+                        if ($childrenName == 'av:Кол7_Таб34_2ОГРНДолжника') {
+                            $uniqueier = 'av:Кол8_Таб34_2СуммаДенСредств';
+                            $groupName .= ' и по ' . $uniqueier;
+                            $ISIN      .= $xmlObject->children()->$uniqueier;
+                        }
                         break;
                     }
                 }

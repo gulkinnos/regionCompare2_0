@@ -109,7 +109,8 @@ if (!$filename2 == '') {
 } else {
     die('Не выбран файл 2');
 }
-echo 'Печеньки: '.'2'.'<br>';
+echo 'Печеньки: '.'3'.'<br>';
+
 libxml_use_internal_errors(true);
 $fileContent1 = preg_replace('/(<av:ОКУД[^[:space:]]*).([^>]*)/', '$1', $fileContent1);
 $fileContent1 = preg_replace('/(<av:Files).*(<\/av:Files>)/ms', '', $fileContent1);
