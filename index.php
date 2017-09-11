@@ -109,9 +109,10 @@ if (!$filename2 == '') {
 } else {
     die('Не выбран файл 2');
 }
-
+echo 'Печеньки: '.'2'.'<br>';
 libxml_use_internal_errors(true);
 $fileContent1 = preg_replace('/(<av:ОКУД[^[:space:]]*).([^>]*)/', '$1', $fileContent1);
+$fileContent1 = preg_replace('/(<av:Files).*(<\/av:Files>)/ms', '', $fileContent1);
 $xmlObject1 = new SimpleXMLElement($fileContent1);
 if (!$xmlObject1) {
     echo "Ошибка загрузки XML\n";
@@ -120,6 +121,7 @@ if (!$xmlObject1) {
     }
 }
 $fileContent2 = preg_replace('/(<av:ОКУД[^[:space:]]*).([^>]*)/', '$1', $fileContent2);
+$fileContent2 = preg_replace('/(<av:Files).*(<\/av:Files>)/ms', '', $fileContent2);
 $xmlObject2 = new SimpleXMLElement($fileContent2);
 if (!$xmlObject2) {
     echo "Ошибка загрузки XML\n";
