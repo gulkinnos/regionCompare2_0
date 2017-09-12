@@ -1,6 +1,12 @@
 <head>
     <meta charset="utf-8"/>
 </head>
+<!--<p>Тут не работает</p>
+<p>Слушайтесь Инночку и идите <a href="http://compare.gulkinnos.ru/">на нормальный сервер</a>
+</p>-->
+<?php
+//die();
+?>
 <style>
     .commonDiv div{
         display: inline-block;
