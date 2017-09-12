@@ -11,30 +11,46 @@ class Headers {
     public $counter = 0;
     public $fileNumber = 0;
     public $externalVocab = null;
+    public $strangeCounter3_9 = 0;
 
     public function getFullHeaders($parentNodePath, $xmlObject, $fullNodePath = '', $currentNodeName = '', $childNumber = 0, $ISIN = null) {
+        
         if ($xmlObject->children()) {
             if ($fullNodePath !== '') {
                 $this->fullHeaders[$fullNodePath]['nodeName'] = $currentNodeName;
                 $this->fullHeaders[$fullNodePath][$this->fileNumber] = strval($xmlObject);
             }
             $childNumber = 0;
+
             if (is_null($ISIN)) {
+                $counter = 0;
                 foreach
                 ($xmlObject->children() as $childrenName => $childrenNode) {
                     if ($childrenName == 'av:Кол7_Таб2КодISIN' ||
                             $childrenName == 'av:Кол7_Таб8КодISIN' ||
                             $childrenName == 'av:Кол6_Таб3КодISIN' ||
-                            $childrenName == 'av:Кол7_Таб34_2ОГРНДолжника'
+                            $childrenName == 'av:Кол7_Таб34_2ОГРНДолжника' ||
+                            $childrenName == 'av:Кол8_Таб1_1СуммаДенСред' ||
+                            $childrenName == 'av:Кол3_Таб27ОГРНОбщ' ||
+                            $childrenName == 'av:Кол3_Таб9ОГРНВекселедателя'
                     ) {
                         $ISIN = strval($childrenNode);
-
                         $groupName = $childrenName;
                         if ($childrenName == 'av:Кол7_Таб34_2ОГРНДолжника') {
                             $uniqueier = 'av:Кол8_Таб34_2СуммаДенСредств';
                             $groupName .= ' и по ' . $uniqueier;
-                            $ISIN      .= $xmlObject->children()->$uniqueier;
+                            $ISIN .= $xmlObject->children()->$uniqueier;
+                        } elseif ($childrenName == 'av:Кол6_Таб3КодISIN') {
+                            $uniqueier = 'av:Кол3_Таб3ОГРН';
+                            $groupName .= ' и по ' . $uniqueier;
+                            $ISIN .= $xmlObject->children()->$uniqueier;
+                        } elseif ($childrenName == 'av:Кол3_Таб9ОГРНВекселедателя') {
+                            $counter++;
+                            $this->strangeCounter3_9++;
+                            $ISIN .= '/'.$this->strangeCounter3_9;
+                            $groupName .= ' и по номеру записи:' . $this->strangeCounter3_9;
                         }
+                        $ISIN = str_replace('.', ',', $ISIN);
                         break;
                     }
                 }
@@ -51,7 +67,7 @@ class Headers {
                     }
                 }
                 if (isset($groupName)) {
-                    $this->fullHeaders[$fullNodePath]['containsISINs'] = 'Группировка по '.$groupName;
+                    $this->fullHeaders[$fullNodePath]['containsISINs'] = 'Группировка по ' . $groupName;
                 }
                 $this->getFullHeaders($fullNodePath, $node, $childNodePath, $nodeName, $childNumber, $ISIN);
             }

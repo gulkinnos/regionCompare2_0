@@ -109,8 +109,7 @@ if (!$filename2 == '') {
 } else {
     die('Не выбран файл 2');
 }
-echo 'Печеньки: '.'3'.'<br>';
-
+echo 'Печеньки: '.'6'.'<br><br>';
 libxml_use_internal_errors(true);
 $fileContent1 = preg_replace('/(<av:ОКУД[^[:space:]]*).([^>]*)/', '$1', $fileContent1);
 $fileContent1 = preg_replace('/(<av:Files).*(<\/av:Files>)/ms', '', $fileContent1);
@@ -134,14 +133,15 @@ require_once './classes/Headers.php';
 $headers = new Headers();
 $headers->fileNumber = 1;
 $headers->getFullHeaders('', $xmlObject1);
+$headers->strangeCounter3_9=0;
 $headers->fileNumber = 2;
 $headers->getFullHeaders('', $xmlObject2);
 $headers->compareValues();
 ?><table>
-    <tr>
+    <tr class="header">
     <th>Название поля</th>
-    <th>файл 1</th>
-    <th>файл 2</th>
+    <th><?=$_FILES['file1']['name']?></th>
+    <th><?=$_FILES['file2']['name']?></th>
 </tr>
 <?php foreach ($headers->fullHeaders as $nodeName => $nodeValues) { ?>
     <?php
