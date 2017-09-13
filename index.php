@@ -68,8 +68,16 @@
 <div id="version">v 2.0 11.09.2017
     <br>13.09.2016 Пофиксил ошибку группировки по ISIN. Если уже сгруппированно, то не группируется по сумме.
     <br>11.09.2017 Всё переделал. Работает в 30000 / 0.385 раз быстрее. Разбирает рекурсивно, независимо от структуры и вложенности.
+    <br>Реализованы группировки по:
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол7_Таб2КодISIN'
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол7_Таб8КодISIN'
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол6_Таб3КодISIN' и по 'av:Кол3_Таб3ОГРН'
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол7_Таб34_2ОГРНДолжника' и по 'av:Кол8_Таб34_2СуммаДенСредств'
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол8_Таб1_1СуммаДенСред'
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол3_Таб27ОГРНОбщ'
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол3_Таб9ОГРНВекселедателя' и по номеру по порядку в файле
     <br>Находится в режиме бета-тестирования.
-    <br>Я люблю печеньки..
+    <br>Я люблю choko pie..
 </div>
 <form method="POST" name="111" enctype="multipart/form-data">
     <label for="file1input">файл с данными от УК
@@ -115,7 +123,7 @@ if (!$filename2 == '') {
 } else {
     die('Не выбран файл 2');
 }
-echo 'Печеньки: '.'6'.'<br><br>';
+echo 'Печеньки: '.'7 и 1/2'.'<br><br>';
 libxml_use_internal_errors(true);
 $fileContent1 = preg_replace('/(<av:ОКУД[^[:space:]]*).([^>]*)/', '$1', $fileContent1);
 $fileContent1 = preg_replace('/(<av:Files).*(<\/av:Files>)/ms', '', $fileContent1);

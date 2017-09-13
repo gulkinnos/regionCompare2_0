@@ -23,16 +23,14 @@ class Headers {
             $childNumber = 0;
 
             if (is_null($ISIN)) {
-                $counter = 0;
-                foreach
-                ($xmlObject->children() as $childrenName => $childrenNode) {
+                foreach ($xmlObject->children() as $childrenName => $childrenNode) {
                     if ($childrenName == 'av:Кол7_Таб2КодISIN' ||
-                            $childrenName == 'av:Кол7_Таб8КодISIN' ||
-                            $childrenName == 'av:Кол6_Таб3КодISIN' ||
-                            $childrenName == 'av:Кол7_Таб34_2ОГРНДолжника' ||
-                            $childrenName == 'av:Кол8_Таб1_1СуммаДенСред' ||
-                            $childrenName == 'av:Кол3_Таб27ОГРНОбщ' ||
-                            $childrenName == 'av:Кол3_Таб9ОГРНВекселедателя'
+                        $childrenName == 'av:Кол7_Таб8КодISIN' ||
+                        $childrenName == 'av:Кол6_Таб3КодISIN' ||
+                        $childrenName == 'av:Кол7_Таб34_2ОГРНДолжника' ||
+                        $childrenName == 'av:Кол8_Таб1_1СуммаДенСред' ||
+                        $childrenName == 'av:Кол3_Таб27ОГРНОбщ' ||
+                        $childrenName == 'av:Кол3_Таб9ОГРНВекселедателя'
                     ) {
                         $ISIN = strval($childrenNode);
                         $groupName = $childrenName;
@@ -45,7 +43,6 @@ class Headers {
                             $groupName .= ' и по ' . $uniqueier;
                             $ISIN .= $xmlObject->children()->$uniqueier;
                         } elseif ($childrenName == 'av:Кол3_Таб9ОГРНВекселедателя') {
-                            $counter++;
                             $this->strangeCounter3_9++;
                             $ISIN .= '/'.$this->strangeCounter3_9;
                             $groupName .= ' и по номеру записи:' . $this->strangeCounter3_9;
@@ -57,10 +54,10 @@ class Headers {
             }
             foreach ($xmlObject->children() as $nodeName => $node) {
                 $childNumber++;
-                if (is_null($ISIN)) {
+                if (is_null($ISIN) || empty($ISIN)) {
                     $childNodePath = $fullNodePath . '/' . $nodeName . '/' . $childNumber;
                 } else {
-                    if (!empty($ISIN) && strpos($fullNodePath, $ISIN) === false) {
+                    if (strpos($fullNodePath, $ISIN) === false) {
                         $childNodePath = $parentNodePath . '/' . $ISIN . '/' . $nodeName;
                     } else {
                         $childNodePath = substr($fullNodePath, 0, strpos($fullNodePath, $ISIN)) . '/' . $ISIN . '/' . $nodeName;
