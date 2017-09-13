@@ -60,7 +60,7 @@ class Headers {
                 if (is_null($ISIN)) {
                     $childNodePath = $fullNodePath . '/' . $nodeName . '/' . $childNumber;
                 } else {
-                    if (strpos($fullNodePath, $ISIN) === false) {
+                    if (!empty($ISIN) && strpos($fullNodePath, $ISIN) === false) {
                         $childNodePath = $parentNodePath . '/' . $ISIN . '/' . $nodeName;
                     } else {
                         $childNodePath = substr($fullNodePath, 0, strpos($fullNodePath, $ISIN)) . '/' . $ISIN . '/' . $nodeName;
