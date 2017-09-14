@@ -133,7 +133,8 @@ if (!$filename2 == '') {
     die('Не выбран файл 2');
 }
 
-echo 'Печеньки: ' . '9 и 1/2' . '<br><br>';
+echo 'ох уж эти итоговые строки.. Теперь ВСЕ итоговые строки будут соотноситься с итоговыми строками. Опеределяется по наличию фразы "НомерГрафыИтого" <br>';
+echo 'Печеньки: ' . '10' . '<br><br>';
 echo 'Бесплатная пробная версия. Если Вам нравится наш сайт и Вы хотите пользоваться им дальше, переведите указаное количество печенек разработчику ))'. '<br><br>';
 libxml_use_internal_errors(true);
 $fileContent1 = preg_replace('/(<av:ОКУД[^[:space:]]*).([^>]*)/', '$1', $fileContent1);
@@ -156,11 +157,17 @@ if (!$xmlObject2) {
 }
 require_once './classes/Headers.php';
 $headers = new Headers();
+
+$headers->getTotalParents($xmlObject1);
+$headers->getTotalParents($xmlObject2);
+
 $headers->fileNumber = 1;
 $headers->getFullHeaders('', $xmlObject1);
+
 $headers->strangeCounter3_9 = 0;
 $headers->fileNumber = 2;
 $headers->getFullHeaders('', $xmlObject2);
+
 $headers->compareValues();
 ?><table>
     <tr class="header">

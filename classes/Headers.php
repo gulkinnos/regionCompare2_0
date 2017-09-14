@@ -12,8 +12,22 @@ class Headers {
     public $fileNumber = 0;
     public $externalVocab = null;
     public $strangeCounter3_9 = 0;
+    public $totalParents = [];
+    public $groupRules = [
+        'av:Кол7_Таб8КодISIN',
+        'av:Кол6_Таб3КодISIN',
+        'av:Кол7_Таб34_2ОГРНДолжника',
+        'av:Кол8_Таб1_1СуммаДенСред',
+        'av:Кол3_Таб27ОГРНОбщ',
+        'av:Кол3_Таб9ОГРНВекселедателя',
+        'av:Кол6_Таб13КодISIN',
+        'av:Кол2_Таб26_1НомерКредитДог',
+        'av:Кол2_Таб26_2НомерКредитДог',
+        'av:Кол8_Таб34_1ФактСуммаЗадолж',
+        'av:Кол8_Таб34_2СтоимРасчетАктивов'
+    ];
 
-    public function getFullHeaders($parentNodePath, $xmlObject, $fullNodePath = '', $currentNodeName = '', $childNumber = 0, $ISIN = null) {
+    public function getFullHeaders($parentNodePath, $xmlObject, $fullNodePath = '', $currentNodeName = '', $childNumber = 0, $groupUniqieValue = null) {
 
         if ($xmlObject->children()) {
             if ($fullNodePath !== '') {
@@ -21,59 +35,51 @@ class Headers {
                 $this->fullHeaders[$fullNodePath][$this->fileNumber] = strval($xmlObject);
             }
             $childNumber = 0;
-
-            if (is_null($ISIN)) {
+            if (is_null($groupUniqieValue)) {
                 foreach ($xmlObject->children() as $childrenName => $childrenNode) {
-                    if ($childrenName == 'av:Кол7_Таб2КодISIN' ||
-                            $childrenName == 'av:Кол7_Таб8КодISIN' ||
-                            $childrenName == 'av:Кол6_Таб3КодISIN' ||
-                            $childrenName == 'av:Кол7_Таб34_2ОГРНДолжника' ||
-                            $childrenName == 'av:Кол8_Таб1_1СуммаДенСред' ||
-                            $childrenName == 'av:Кол3_Таб27ОГРНОбщ' ||
-                            $childrenName == 'av:Кол3_Таб9ОГРНВекселедателя' ||
-                            $childrenName == 'av:Кол6_Таб13КодISIN' ||
-                            $childrenName == 'av:Кол2_Таб26_1НомерКредитДог' ||
-                            $childrenName == 'av:Кол2_Таб26_2НомерКредитДог'||
-                            $childrenName == 'av:Кол8_Таб34_1ФактСуммаЗадолж' ||
-                            $childrenName == 'av:Кол8_Таб34_2СтоимРасчетАктивов'
-                    ) {
-                        $ISIN = strval($childrenNode);
+                    if (in_array($childrenName, $this->groupRules)) {
+                        $groupUniqieValue = strval($childrenNode);
                         $groupName = $childrenName;
                         if ($childrenName == 'av:Кол7_Таб34_2ОГРНДолжника') {
                             $uniqueier = 'av:Кол8_Таб34_2СуммаДенСредств';
                             $groupName .= ' и по ' . $uniqueier;
-                            $ISIN .= $xmlObject->children()->$uniqueier;
+                            $groupUniqieValue .= $xmlObject->children()->$uniqueier;
                         } elseif ($childrenName == 'av:Кол6_Таб3КодISIN') {
                             $uniqueier = 'av:Кол3_Таб3ОГРН';
                             $groupName .= ' и по ' . $uniqueier;
-                            $ISIN .= $xmlObject->children()->$uniqueier;
+                            $groupUniqieValue .= $xmlObject->children()->$uniqueier;
                         } elseif ($childrenName == 'av:Кол3_Таб9ОГРНВекселедателя') {
                             $this->strangeCounter3_9++;
-                            $ISIN .= '/' . $this->strangeCounter3_9;
+                            $groupUniqieValue .= '/' . $this->strangeCounter3_9;
                             $groupName .= ' и по номеру записи:' . $this->strangeCounter3_9;
                         }
-                        $ISIN = str_replace('.', ',', $ISIN);
+                        $groupUniqieValue = str_replace('.', ',', $groupUniqieValue);
                         break;
                     }
                 }
             }
             foreach ($xmlObject->children() as $nodeName => $node) {
                 $childNumber++;
-                if (is_null($ISIN) || empty($ISIN)) {
-                    $childNodePath = $fullNodePath . '/' . $nodeName . '/' . $childNumber;
+                if (in_array($nodeName, $this->totalParents)) {
+                    $childNodePath = $parentNodePath . '/total/' . $nodeName;
                 } else {
-                    if (strpos($fullNodePath, $ISIN) === false) {
-                        $childNodePath = $parentNodePath . '/' . $ISIN . '/' . $nodeName;
+                    if (is_null($groupUniqieValue) || empty($groupUniqieValue)) {
+                        $childNodePath = $fullNodePath . '/' . $nodeName . '/' . $childNumber;
                     } else {
-                        $childNodePath = substr($fullNodePath, 0, strpos($fullNodePath, $ISIN)) . '/' . $ISIN . '/' . $nodeName;
+                        if (strpos($fullNodePath, $groupUniqieValue) === false) {
+                            $childNodePath = $parentNodePath . '/' . $groupUniqieValue . '/' . $nodeName;
+                        } else {
+                            $childNodePath = substr($fullNodePath, 0, strpos($fullNodePath, $groupUniqieValue)) . '/' . $groupUniqieValue . '/' . $nodeName;
+                        }
                     }
                 }
                 if (isset($groupName)) {
                     $this->fullHeaders[$fullNodePath]['containsISINs'] = 'Группировка по ' . $groupName;
                 }
-                $this->getFullHeaders($fullNodePath, $node, $childNodePath, $nodeName, $childNumber, $ISIN);
+                $this->getFullHeaders($fullNodePath, $node, $childNodePath, $nodeName, $childNumber, $groupUniqieValue);
             }
         } else {
+
             $this->fullHeaders[$fullNodePath]['parentNodePath'] = $parentNodePath;
             $this->fullHeaders[$fullNodePath]['nodeName'] = $currentNodeName;
             $this->fullHeaders[$fullNodePath]['fullNodePath'] = $fullNodePath;
@@ -89,6 +95,19 @@ class Headers {
                     $this->fullHeaders[$nodeXpath]['difference'] = 'identical';
                 }
             }
+        }
+    }
+
+    public function getTotalParents($xmlObject, $parentNodeName = '') {
+        if ($xmlObject->children()) {
+            foreach ($xmlObject->children() as $nodeName => $node) {
+                if (mb_strpos($nodeName, 'НомерГрафыИтого') !== false) {
+                    $this->totalParents[$nodeName] = $nodeName;
+                }
+                $this->getTotalParents($node, $nodeName);
+            }
+        } else {
+            return;
         }
     }
 
