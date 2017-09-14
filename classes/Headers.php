@@ -14,7 +14,7 @@ class Headers {
     public $strangeCounter3_9 = 0;
 
     public function getFullHeaders($parentNodePath, $xmlObject, $fullNodePath = '', $currentNodeName = '', $childNumber = 0, $ISIN = null) {
-        
+
         if ($xmlObject->children()) {
             if ($fullNodePath !== '') {
                 $this->fullHeaders[$fullNodePath]['nodeName'] = $currentNodeName;
@@ -25,12 +25,17 @@ class Headers {
             if (is_null($ISIN)) {
                 foreach ($xmlObject->children() as $childrenName => $childrenNode) {
                     if ($childrenName == 'av:Кол7_Таб2КодISIN' ||
-                        $childrenName == 'av:Кол7_Таб8КодISIN' ||
-                        $childrenName == 'av:Кол6_Таб3КодISIN' ||
-                        $childrenName == 'av:Кол7_Таб34_2ОГРНДолжника' ||
-                        $childrenName == 'av:Кол8_Таб1_1СуммаДенСред' ||
-                        $childrenName == 'av:Кол3_Таб27ОГРНОбщ' ||
-                        $childrenName == 'av:Кол3_Таб9ОГРНВекселедателя'
+                            $childrenName == 'av:Кол7_Таб8КодISIN' ||
+                            $childrenName == 'av:Кол6_Таб3КодISIN' ||
+                            $childrenName == 'av:Кол7_Таб34_2ОГРНДолжника' ||
+                            $childrenName == 'av:Кол8_Таб1_1СуммаДенСред' ||
+                            $childrenName == 'av:Кол3_Таб27ОГРНОбщ' ||
+                            $childrenName == 'av:Кол3_Таб9ОГРНВекселедателя' ||
+                            $childrenName == 'av:Кол6_Таб13КодISIN' ||
+                            $childrenName == 'av:Кол2_Таб26_1НомерКредитДог' ||
+                            $childrenName == 'av:Кол2_Таб26_2НомерКредитДог'||
+                            $childrenName == 'av:Кол8_Таб34_1ФактСуммаЗадолж' ||
+                            $childrenName == 'av:Кол8_Таб34_2СтоимРасчетАктивов'
                     ) {
                         $ISIN = strval($childrenNode);
                         $groupName = $childrenName;
@@ -44,7 +49,7 @@ class Headers {
                             $ISIN .= $xmlObject->children()->$uniqueier;
                         } elseif ($childrenName == 'av:Кол3_Таб9ОГРНВекселедателя') {
                             $this->strangeCounter3_9++;
-                            $ISIN .= '/'.$this->strangeCounter3_9;
+                            $ISIN .= '/' . $this->strangeCounter3_9;
                             $groupName .= ' и по номеру записи:' . $this->strangeCounter3_9;
                         }
                         $ISIN = str_replace('.', ',', $ISIN);
@@ -86,6 +91,7 @@ class Headers {
             }
         }
     }
+
     /**
      * 
      * @param type $str1

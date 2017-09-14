@@ -53,6 +53,10 @@
     tr {
         width: 100%
     }
+    th.containsGroup{
+        text-align: left;
+        background-color: rgba(255, 255, 0, 0.45);
+    }
     /*    table > td {
             width: 30%;
         }*/
@@ -65,7 +69,7 @@
         font-size: 0.7rem;
     }
 </style>
-<div id="version">v 2.0 11.09.2017
+<div id="version">v 2.01 14.09.2017
     <br>13.09.2016 Пофиксил ошибку группировки по ISIN. Если уже сгруппированно, то не группируется по сумме.
     <br>11.09.2017 Всё переделал. Работает в 30000 / 0.385 раз быстрее. Разбирает рекурсивно, независимо от структуры и вложенности.
     <br>Реализованы группировки по:
@@ -76,6 +80,10 @@
     <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол8_Таб1_1СуммаДенСред'
     <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол3_Таб27ОГРНОбщ'
     <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол3_Таб9ОГРНВекселедателя' и по номеру по порядку в файле
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол6_Таб13КодISIN
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол2_Таб26_1НомерКредитДог
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол2_Таб26_2НомерКредитДог
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;'av:Кол8_Таб34_1ФактСуммаЗадолж
     <br>Находится в режиме бета-тестирования.
     <br>Я люблю choko pie..
 </div>
@@ -123,7 +131,9 @@ if (!$filename2 == '') {
 } else {
     die('Не выбран файл 2');
 }
-echo 'Печеньки: '.'7 и 1/2'.'<br><br>';
+
+echo 'Печеньки: ' . '9 и 1/2' . '<br><br>';
+echo 'Бесплатная пробная версия. Если Вам нравится наш сайт и Вы хотите пользоваться им дальше, переведите указаное количество печенек разработчику ))'. '<br><br>';
 libxml_use_internal_errors(true);
 $fileContent1 = preg_replace('/(<av:ОКУД[^[:space:]]*).([^>]*)/', '$1', $fileContent1);
 $fileContent1 = preg_replace('/(<av:Files).*(<\/av:Files>)/ms', '', $fileContent1);
@@ -147,45 +157,45 @@ require_once './classes/Headers.php';
 $headers = new Headers();
 $headers->fileNumber = 1;
 $headers->getFullHeaders('', $xmlObject1);
-$headers->strangeCounter3_9=0;
+$headers->strangeCounter3_9 = 0;
 $headers->fileNumber = 2;
 $headers->getFullHeaders('', $xmlObject2);
 $headers->compareValues();
 ?><table>
     <tr class="header">
-    <th>Название поля</th>
-    <th><?=$_FILES['file1']['name']?></th>
-    <th><?=$_FILES['file2']['name']?></th>
-</tr>
-<?php foreach ($headers->fullHeaders as $nodeName => $nodeValues) { ?>
-    <?php
-    if (isset($nodeValues['containsISINs'])) {
-        echo '<th>' . $nodeValues['containsISINs'] . '</th>';
+        <th>Название поля</th>
+        <th><?= $_FILES['file1']['name'] ?></th>
+        <th><?= $_FILES['file2']['name'] ?></th>
+    </tr>
+    <?php foreach ($headers->fullHeaders as $nodeName => $nodeValues) { ?>
+        <?php
+        if (isset($nodeValues['containsISINs'])) {
+            echo '<th class="containsGroup" colspan="3">' . $nodeValues['containsISINs'] . '</th>';
+        }
+        ?>
+        <tr class="<?php
+        if (isset($nodeValues['difference'])) {
+            echo $nodeValues['difference'];
+        }
+        ?>">
+            <td class="nodeName"><?php
+                if (isset($nodeValues['nodeName'])) {
+                    echo $nodeValues['nodeName'];
+                }
+                ?> </td>
+            <td class="value"><?php
+                if (isset($nodeValues[1])) {
+                    echo $nodeValues[1];
+                }
+                ?></td>
+            <td class="value"><?php
+                if (isset($nodeValues[2])) {
+                    echo $nodeValues[2];
+                }
+                ?></td>
+        </tr>
+        <?php
     }
     ?>
-    <tr class="<?php
-    if (isset($nodeValues['difference'])) {
-        echo $nodeValues['difference'];
-    }
-    ?>">
-        <td class="nodeName"><?php
-            if (isset($nodeValues['nodeName'])) {
-                echo $nodeValues['nodeName'];
-            }
-            ?> </td>
-        <td class="value"><?php
-            if (isset($nodeValues[1])) {
-                echo $nodeValues[1];
-            }
-            ?></td>
-        <td class="value"><?php
-            if (isset($nodeValues[2])) {
-                echo $nodeValues[2];
-            }
-            ?></td>
-    </tr>
-    <?php
-}
-?>
 </table>
 
