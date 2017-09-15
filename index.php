@@ -4,12 +4,7 @@
     <script src="resources/jquery-3.2.1.min.js"></script>
     <script src="resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 </head>
-<?php
-if ($_SERVER['HTTP_HOST'] !== 'compare.gulkinnos.ru') {
-    echo'<p>Это резервный сервер. Не гарантируется, что здесь всё будет работать корректно.</p>
-    <p>Слушайтесь Инночку и идите <a href = "http://compare.gulkinnos.ru/">на нормальный сервер</a></p>';
-}
-?>
+
 <style>
     .commonDiv div{
         display: inline-block;
@@ -94,39 +89,48 @@ if ($_SERVER['HTTP_HOST'] !== 'compare.gulkinnos.ru') {
     }
 </style>
 <body>
-    <div class="row">
+    <div class="col-xs-12">
         <div class="row">
-            <!--<h1>Сравнение .xtdd</h1>-->
-            <div class="row col-xs-6 borderGreyRightLeft fullHeight">
+            <?php
+            if ($_SERVER['HTTP_HOST'] !== 'compare.gulkinnos.ru') {
+                echo'<p>Это резервный сервер. Не гарантируется, что здесь всё будет работать корректно.</p>
+    <p>Слушайтесь Инночку и идите <a href = "http://compare.gulkinnos.ru/">на нормальный сервер</a></p>';
+            }
+            ?>
+            <div class="col-xs-6 borderGreyRightLeft fullHeight">
                 <h1>Сравнение .xtdd</h1>
-                <form method="POST" name="111" enctype="multipart/form-data">
-                    <input type="hidden" name="startComparison" />
-                    <div class="form-group col-xs-12">
-                        <label for="file1input">файл с данными от УК
-                            <input id="file1input" type="file" name="file1" placeholder="файл с данными от УК"></label>
-                    </div>
-                    <div class="form-group col-xs-12">
-                        <label for="file2input">файл с данными СПЕЦДЕПА
-                            <input id="file2input" type="file" name="file2" placeholder="файл с данными СПЕЦДЕПА"></label>
-                    </div>
-                    <div class="row col-xs-12">
-                        <div class="col-xs-7">
-                            <button class="btn btn-success" id="submitInput" type="submit">Запустить проверку</button>
+                <div class="row">
+                    <form method="POST" name="111" enctype="multipart/form-data">
+                        <input type="hidden" name="startComparison" />
+                        <div class="form-group col-xs-12">
+                            <label for="file1input">файл с данными от УК
+                                <input id="file1input" type="file" name="file1" placeholder="файл с данными от УК"></label>
                         </div>
-                        <div class="col-xs-5">
-                            <a href="/manageVocab.php" target="_blank">
-                                <div class="btn btn-info">Открыть словарь соответствий</div>
-                            </a>
+                        <div class="form-group col-xs-12">
+                            <label for="file2input">файл с данными СПЕЦДЕПА
+                                <input id="file2input" type="file" name="file2" placeholder="файл с данными СПЕЦДЕПА"></label>
                         </div>
-                    </div>
-                </form>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <span>
+                                    <button class="btn btn-success" id="submitInput" type="submit">Запустить проверку</button>
+                                </span>
+                                <span style="float: right;">
+                                    <a href="/manageVocab.php" target="_blank">
+                                        <div class="btn btn-info">Открыть словарь соответствий</div>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="row col-xs-3 borderGreyRightLeft fullHeight">
+            <div class="col-xs-3 borderGreyRightLeft fullHeight">
                 <h4>Блок для флуда</h4>
                 Поддержка проекта временно недоступна<br>
                 Да пребудет с вами Сила PHP !
             </div>
-            <div class="row col-xs-3 borderGreyRightLeft fullHeight">
+            <div class="col-xs-3 borderGreyRightLeft fullHeight">
                 <div id="version" class="col-xs-12">v 2.01 14.09.2017
                     <br>13.09.2016 Пофиксил ошибку группировки по ISIN. Если уже сгруппированно, то не группируется по сумме.
                     <br>11.09.2017 Всё переделал. Работает в 30000 / 0.385 раз быстрее. Разбирает рекурсивно, независимо от структуры и вложенности.
