@@ -101,8 +101,10 @@ class Headers {
     public function getTotalParents($xmlObject, $parentNodeName = '') {
         if ($xmlObject->children()) {
             foreach ($xmlObject->children() as $nodeName => $node) {
-                if (mb_strpos($nodeName, 'НомерГрафыИтого') !== false) {
-                    $this->totalParents[$nodeName] = $nodeName;
+                if (!isset($this->totalParents[$nodeName])) {
+                    if (mb_strpos($nodeName, 'НомерГрафыИтого') !== false) {
+                        $this->totalParents[$nodeName] = $nodeName;
+                    }
                 }
                 $this->getTotalParents($node, $nodeName);
             }
