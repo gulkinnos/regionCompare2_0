@@ -143,6 +143,10 @@
         </div>
         <div class="row col-xs-12">
             <?php
+            date_default_timezone_set('Europe/Moscow');
+            require_once './classes/Logger.php';
+            $logger = new Logger();
+            $logger->logAccessIntoFile();
             if (!isset($_POST['startComparison'])) {
                 die('<div class="row col-xs-12"> Привет! Выбери два файла и нажми зеленую кнопку</div>');
             }
