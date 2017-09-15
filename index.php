@@ -4,9 +4,12 @@
     <script src="resources/jquery-3.2.1.min.js"></script>
     <script src="resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 </head>
-<!--<p>Это резервный сервер. Не гарантируется, что здесь всё будет работать корректно.</p>
-<p>Слушайтесь Инночку и идите <a href="http://compare.gulkinnos.ru/">на нормальный сервер</a>
-</p>-->
+<?php
+if ($_SERVER['HTTP_HOST'] !== 'compare.gulkinnos.ru') {
+    echo'<p>Это резервный сервер. Не гарантируется, что здесь всё будет работать корректно.</p>
+    <p>Слушайтесь Инночку и идите <a href = "http://compare.gulkinnos.ru/">на нормальный сервер</a></p>';
+}
+?>
 <style>
     .commonDiv div{
         display: inline-block;
@@ -106,19 +109,22 @@
                         <label for="file2input">файл с данными СПЕЦДЕПА
                             <input id="file2input" type="file" name="file2" placeholder="файл с данными СПЕЦДЕПА"></label>
                     </div>
-                    <div class="form-group col-xs-8">
-                        <button class="btn btn-success" id="submitInput" type="submit">Запустить проверку</button>
-                    </div>
-                    <div class="form-group col-xs-4">
-                        <a href="/manageVocab.php" target="_blank">
-                            <div class="btn btn-info">Открыть словарь соответствий</div>
-                        </a>
+                    <div class="row col-xs-12">
+                        <div class="col-xs-7">
+                            <button class="btn btn-success" id="submitInput" type="submit">Запустить проверку</button>
+                        </div>
+                        <div class="col-xs-5">
+                            <a href="/manageVocab.php" target="_blank">
+                                <div class="btn btn-info">Открыть словарь соответствий</div>
+                            </a>
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="row col-xs-3 borderGreyRightLeft fullHeight">
                 <h4>Блок для флуда</h4>
-                Осталось два часа, чтобы найти баги
+                Поддержка проекта временно недоступна<br>
+                Да пребудет с вами Сила PHP !
             </div>
             <div class="row col-xs-3 borderGreyRightLeft fullHeight">
                 <div id="version" class="col-xs-12">v 2.01 14.09.2017
