@@ -21,13 +21,19 @@
         background-color: bisque;
     }
     .different{
-        background-color: #ffbfbf;
+        background-color:  rgba( 255,0, 0, 0.25);;
+    }
+    .different:hover{
+        background-color:  rgba( 255,0, 0, 0.4);;
     }
     .superDifferent{
         background-color: #ffbfbf;
     }
     .identical{
-        background-color: #c6fdc6;
+        background-color:  rgba(0, 255, 0, 0.25);;
+    }
+    .identical:hover{
+        background-color:  rgba(0, 255, 0, 0.4);
     }
     .impossible{
         background-color: orange;
@@ -40,6 +46,8 @@
     }
     th,td{
         border: 1px solid black;
+        padding-top: 0.1rem;
+        padding-bottom: 0.1rem;
     }
     .nodeName{
         width: 40%
@@ -49,14 +57,22 @@
     }
     table{
         border-collapse:  collapse;
-        font-size: 1.3rem;
+        font-size: 14px;
+        /*font-size: 1.3rem;*/
     }
     tr {
-        width: 100%
+        width: 100%;
     }
+    /*    tr:hover{
+            border-top: solid 2px black;
+            border-bottom: solid 2px black;
+        }*/
     th.containsGroup{
         text-align: left;
-        background-color: rgba(255, 255, 0, 0.45);
+        background-color: rgba(255, 255, 0, 0.25);
+    }
+    th.containsGroup:hover{
+        background-color: rgba(255, 255, 0, 0.4);
     }
     #version{
         top: 0;
@@ -129,7 +145,6 @@
             }
             if (!$filename1 == '') {
                 if (file_exists($filename1)) {
-
                     $fileContent1 = file_get_contents($filename1);
                 } else {
                     die('Файл 1 выбран, но не загрузился на сервер. Проверьте права или что-то ещё на серваке');
@@ -140,7 +155,6 @@
 
             if (!$filename2 == '') {
                 if (file_exists($filename2)) {
-
                     $fileContent2 = file_get_contents($filename2);
                 } else {
                     die('Файл 2 выбран, но не загрузился на сервер. Проверьте права или что-то ещё на серваке');
