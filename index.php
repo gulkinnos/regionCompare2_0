@@ -84,7 +84,7 @@
     <div class="row">
         <div class="row">
             <!--<h1>Сравнение .xtdd</h1>-->
-            <div class="row col-xs-7">
+            <div class="row col-xs-6">
                 <h1>Сравнение .xtdd</h1>
                 <form method="POST" name="111" enctype="multipart/form-data">
                     <input type="hidden" name="startComparison" />
@@ -106,7 +106,11 @@
                     </div>
                 </form>
             </div>
-            <div class="row col-xs-5">
+            <div class="row col-xs-3">
+                Блок для флуда<br>
+                Осталось два часа, чтобы найти баги
+            </div>
+            <div class="row col-xs-3">
                 <div id="version" class="col-xs-12">v 2.01 14.09.2017
                     <br>13.09.2016 Пофиксил ошибку группировки по ISIN. Если уже сгруппированно, то не группируется по сумме.
                     <br>11.09.2017 Всё переделал. Работает в 30000 / 0.385 раз быстрее. Разбирает рекурсивно, независимо от структуры и вложенности.
