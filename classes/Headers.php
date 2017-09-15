@@ -174,7 +174,7 @@ class Headers {
             $currentVocabFileName = array_pop($currentVocabFileNames);
             $result = $this->csv_to_array($currentVocabFileName, '~');
         }
-        echo 'Словарь подключен</br>';
+//        echo 'Словарь подключен</br>';
         $this->externalVocab = $result;
         return $result;
     }
