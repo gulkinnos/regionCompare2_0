@@ -21,9 +21,9 @@ class Logger {
                 $message .= ' Файл 2: не указан';
             }
         }
-        $fileName = $_SERVER['DOCUMENT_ROOT'] . '/logs/access.log';
+        $fileName = 'logs/access.php';
         $file = fopen($fileName, 'a+');
-        $stringToLog = $dateTime . ' ' . $message . "\n";
+        $stringToLog = mb_convert_encoding($dateTime . ' ' . $message . "<br>\n", 'UTF-8');
         fwrite($file, $stringToLog);
         fclose($file);
     }
