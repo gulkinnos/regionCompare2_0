@@ -23,7 +23,7 @@ class Logger {
         }
         $fileName = 'logs/access.php';
         $file = fopen($fileName, 'a+');
-        $stringToLog = mb_convert_encoding($dateTime . ' ' . $message . "<br>\n", 'UTF-8');
+        $stringToLog = mb_convert_encoding($dateTime . ' ' . $message . "<br>\r\n", 'UTF-8');
         fwrite($file, $stringToLog);
         fclose($file);
     }
