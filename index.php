@@ -84,30 +84,30 @@
     <div class="row">
         <div class="row">
             <!--<h1>Сравнение .xtdd</h1>-->
-            <div class="row col-lg-7">
+            <div class="row col-xs-7">
                 <h1>Сравнение .xtdd</h1>
                 <form method="POST" name="111" enctype="multipart/form-data">
                     <input type="hidden" name="startComparison" />
-                    <div class="form-group col-lg-12">
+                    <div class="form-group col-xs-12">
                         <label for="file1input">файл с данными от УК
                             <input id="file1input" type="file" name="file1" placeholder="файл с данными от УК"></label>
                     </div>
-                    <div class="form-group col-lg-12">
+                    <div class="form-group col-xs-12">
                         <label for="file2input">файл с данными СПЕЦДЕПА
                             <input id="file2input" type="file" name="file2" placeholder="файл с данными СПЕЦДЕПА"></label>
                     </div>
-                    <div class="form-group col-lg-8">
+                    <div class="form-group col-xs-8">
                         <button class="btn btn-success" id="submitInput" type="submit">Запустить проверку</button>
                     </div>
-                    <div class="form-group col-lg-4">
+                    <div class="form-group col-xs-4">
                         <a href="/manageVocab.php" target="_blank">
                             <div class="btn btn-info">Открыть словарь соответствий</div>
                         </a>
                     </div>
                 </form>
             </div>
-            <div class="row col-lg-5">
-                <div id="version" class="col-lg-12">v 2.01 14.09.2017
+            <div class="row col-xs-5">
+                <div id="version" class="col-xs-12">v 2.01 14.09.2017
                     <br>13.09.2016 Пофиксил ошибку группировки по ISIN. Если уже сгруппированно, то не группируется по сумме.
                     <br>11.09.2017 Всё переделал. Работает в 30000 / 0.385 раз быстрее. Разбирает рекурсивно, независимо от структуры и вложенности.
                     <br>Реализованы группировки по:
@@ -127,10 +127,10 @@
                 </div>
             </div>
         </div>
-        <div class="row col-lg-12">
+        <div class="row col-xs-12">
             <?php
             if (!isset($_POST['startComparison'])) {
-                die('<div class="row col-lg-12"> Привет! Выбери два файла и нажми зеленую кнопку</div>');
+                die('<div class="row col-xs-12"> Привет! Выбери два файла и нажми зеленую кнопку</div>');
             }
             set_time_limit(3600);
             $filename1 = '';

@@ -14,6 +14,7 @@ class Headers {
     public $strangeCounter3_9 = 0;
     public $totalParents = [];
     public $groupRules = [
+        'av:Кол7_Таб2КодISIN',
         'av:Кол7_Таб8КодISIN',
         'av:Кол6_Таб3КодISIN',
         'av:Кол7_Таб34_2ОГРНДолжника',
