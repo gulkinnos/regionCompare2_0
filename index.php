@@ -79,12 +79,22 @@
         right: 0;
         font-size: 0.7rem;
     }
+    .borderGrey{
+        border: solid 1px grey;
+    }
+    .borderGreyRightLeft{
+        border-right: solid 1px grey;
+        border-left: solid 1px grey;
+    }
+    .fullHeight{
+        height: 25rem;
+    }
 </style>
 <body>
     <div class="row">
         <div class="row">
             <!--<h1>Сравнение .xtdd</h1>-->
-            <div class="row col-xs-6">
+            <div class="row col-xs-6 borderGreyRightLeft fullHeight">
                 <h1>Сравнение .xtdd</h1>
                 <form method="POST" name="111" enctype="multipart/form-data">
                     <input type="hidden" name="startComparison" />
@@ -106,11 +116,11 @@
                     </div>
                 </form>
             </div>
-            <div class="row col-xs-3">
-                Блок для флуда<br>
+            <div class="row col-xs-3 borderGreyRightLeft fullHeight">
+                <h4>Блок для флуда</h4>
                 Осталось два часа, чтобы найти баги
             </div>
-            <div class="row col-xs-3">
+            <div class="row col-xs-3 borderGreyRightLeft fullHeight">
                 <div id="version" class="col-xs-12">v 2.01 14.09.2017
                     <br>13.09.2016 Пофиксил ошибку группировки по ISIN. Если уже сгруппированно, то не группируется по сумме.
                     <br>11.09.2017 Всё переделал. Работает в 30000 / 0.385 раз быстрее. Разбирает рекурсивно, независимо от структуры и вложенности.
