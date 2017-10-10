@@ -49,6 +49,13 @@ class Headers {
                             $uniqueier = 'av:Кол3_Таб3ОГРН';
                             $groupName .= ' и по ' . $uniqueier;
                             $groupUniqieValue .= $xmlObject->children()->$uniqueier;
+                        } elseif ($childrenName == 'av:Кол7_Таб8КодISIN') {
+                            if (trim(str_replace('-', '', $groupUniqieValue)) == '') {
+                                $groupUniqieValue=trim(str_replace('-', '', $groupUniqieValue));
+                                $uniqueier        = 'av:Кол6_Таб8ГосРегНом';
+                                $groupName        .= ' ОТМЕНЕНО, так как пусто!!!  и по ' . $uniqueier;
+                                $groupUniqieValue .= $xmlObject->children()->$uniqueier;
+                            }
                         } elseif ($childrenName == 'av:Кол3_Таб9ОГРНВекселедателя') {
                             $this->strangeCounter3_9++;
                             $groupUniqieValue .= '/' . $this->strangeCounter3_9;
